@@ -1,13 +1,6 @@
 #include "main.h"
 using namespace std;
-struct user {
-	string user_id;
-	string password;
-}user[1230000];
-struct counter {
-	string password;
-	int count;
-}counter[1230000];
+
 int main(void) {
 	//第一题开始
 	ifstream file_in("user.txt", ios::in);
