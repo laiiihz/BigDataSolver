@@ -16,6 +16,13 @@ struct counter {
 	string password;
 	int count;
 }counter[1230000];
+struct counter_temp {
+	string password;
+	int count;
+};
 
 
+void questionOne();
+int questionTwo();
+void insertSort(int number);
 #endif // !_MAIN_H__
