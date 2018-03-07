@@ -25,4 +25,6 @@ struct counter_temp {
 void questionOne();
 int questionTwo();
 void insertSort(int number);
+void realMergeSort(int a, int b);
+void mergeSort(int a, int b);
 #endif // !_MAIN_H__

@@ -1,5 +1,8 @@
 #include "main.h"
+#include <chrono>
+#include <ratio>
 using namespace std;
+using namespace chrono;
 
 void questionOne() {
 	ifstream file_in("user.txt", ios::in);		
@@ -76,16 +79,55 @@ int questionTwo() {
 
 
 void insertSort(int number) {
-	for (int i = 0; i < number; i++) {
-		int nowNumber=counter[i]
+	for (int i = 1; i < number; i++) {
+		int nowCount = counter[i].count;
+		string nowPsd = counter[i].password;
+		int j = i - 1;
+		while (j >= 0 && counter[j].count < nowCount) {
+			counter[j+1] = counter[j];
+			j--;
+		}
+		counter[j+1].count = nowCount;
+		counter[j+1].password = nowPsd;
 	}
+}
+void selectionSort(int number) {
+	for (int i = 0; i < number; i++) {
+		int MAX = counter[i].count;
+		for (int j = i; j < number; j++) {
+			if (counter[j].count > MAX)MAX = counter[j].count;
+		}
+	}
+}
+
+void mergeSort(int number) {
+	realMergeSort(0, number);
+}
+void realMergeSort(int a, int b) {
+	int diff = b - a;
+	if (diff > 0) {
+		int mids = diff / 2;
+		realMergeSort(a, (a + mids));
+		realMergeSort((a + mids + 1), b);
+		
+	}
+}
+void singleMergeSort(int a,int mids,int b) {
+
 }
 
 int main(void) {
 	//第一题开始
 	//questionOne();
-
 	//第二题开始
-	cout<<questionTwo();
-	
+	int a=questionTwo();
+	cout << a << endl;
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+	//insertSort(a);
+	//quickSort(a);
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	cout << "in seconds time:";
+	duration<double, ratio<1, 1>> duration_s(t2 - t1);
+	cout << duration_s.count() << " seconds" << std::endl;
+
 }
