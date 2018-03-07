@@ -94,9 +94,16 @@ void insertSort(int number) {
 void selectionSort(int number) {
 	for (int i = 0; i < number; i++) {
 		int MAX = counter[i].count;
+		int MAX_DOWN = i;
 		for (int j = i; j < number; j++) {
-			if (counter[j].count > MAX)MAX = counter[j].count;
+			if (counter[j].count >= MAX) {
+				MAX = counter[j].count;
+				MAX_DOWN = j;
+			}
 		}
+		temp = counter[MAX_DOWN];
+		counter[MAX_DOWN] = counter[i];
+		counter[i] = temp;
 	}
 }
 
@@ -125,6 +132,7 @@ int main(void) {
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	//insertSort(a);
 	//quickSort(a);
+	selectionSort(a);
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	cout << "in seconds time:";
 	duration<double, ratio<1, 1>> duration_s(t2 - t1);

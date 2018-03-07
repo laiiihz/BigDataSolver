@@ -15,7 +15,7 @@ struct user {
 struct counter {
 	string password;
 	int count;
-}counter[1230000];
+}counter[1230000],temp;
 struct counter_temp {
 	string password;
 	int count;
