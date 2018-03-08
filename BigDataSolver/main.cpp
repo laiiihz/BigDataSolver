@@ -107,21 +107,104 @@ void selectionSort(int number) {
 	}
 }
 
-void mergeSort(int number) {
-	realMergeSort(0, number);
-}
-void realMergeSort(int a, int b) {
-	int diff = b - a;
-	if (diff > 0) {
-		int mids = diff / 2;
-		realMergeSort(a, (a + mids));
-		realMergeSort((a + mids + 1), b);
-		
+void Merge( int s, int m, int e){
+	int n1, n2;
+	n1 = m - s + 1;
+	n2 = e - m;
+	int *l = new int[n1 + 1];
+	int *h = new int[n2 + 1];
+	int temp = s;
+	for (int i = 0; i<n1; i++)
+	{
+		l[i] = counter[temp++].count;
 	}
-}
-void singleMergeSort(int a,int mids,int b) {
+	temp = m + 1;
+	for (int i = 0; i<n2; i++)
+	{
+		h[i] = counter[temp++].count;
+	}
+	for (int i = 0, j = 0, k = s; k <= e; k++)
+	{
+		if (l[i] >= h[j])
+		{
+			counter[k].count = l[i++];
+
+		}
+		else
+		{
+			counter[k].count = h[j++];
+		}
+	}
+	delete[] l;
+	delete[] h;
 
 }
+void MergeSort( int s, int e){
+	if (e>s){
+		int p = (s + e) / 2;
+		MergeSort( s, p);
+		MergeSort( p + 1, e);
+		Merge( s, p, e);
+	}
+
+}
+void mergeSort(int number) {
+	MergeSort(0, number);
+}
+void shellSort( int number) {
+	
+	if (number <= 1)return;
+	for (int div = number / 2; div >= 1; div = div / 2) {
+		for (int i = 0; i <= div; ++i) {
+			for (int j = i; j<number - div; j += div)
+				for (int k = j; k<number; k += div)
+					if (counter[j].count<counter[k].count) {
+						temp = counter[j];
+						counter[j] = counter[k];
+						counter[k] = temp;
+					}
+		}
+	}
+}
+
+//not finish
+void radixSort(int number){
+	int max_bit = countMaxBit(number);
+	int bucket[10][10] = { 0 };
+	int order[10] = { 0 };
+	for (int r = 1; max_bit>0; max_bit--, r *= 10) {
+		for (int i = 0; i<number; i++) {
+			int lsd = (counter[i].count / r) % 10;
+			bucket[lsd][order[lsd]++] = counter[i].count;
+		}
+		int k = 0;
+		for (int i = 0; i<10; i++) {
+			if (order[i] != 0) {
+				for (int j = 0; j<order[i]; j++)
+					counter[k++].count = bucket[i][j];
+			}
+			order[i] = 0;
+		}
+	}
+}
+
+int countMaxBit(int number) {
+	int max_bit=1;
+	int multi = 10;
+	for (int i = 0; i < number;i++) {
+		while (counter[i].count >= multi) {
+			multi *= 10;
+			max_bit++;
+		}
+	}
+	return max_bit;
+}
+
+void heapSort(int number){
+
+}
+
+
 
 int main(void) {
 	//第一题开始
@@ -132,10 +215,16 @@ int main(void) {
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	//insertSort(a);
 	//quickSort(a);
-	selectionSort(a);
+	//cout<<"max_bit"<<countMaxBit(a);
+	//shellSort(a);
+	//radixSort(a);
+	mergeSort(a);
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	cout << "in seconds time:";
 	duration<double, ratio<1, 1>> duration_s(t2 - t1);
 	cout << duration_s.count() << " seconds" << std::endl;
+	cout << counter[0].count << endl;
+	cout << counter[1].count << endl;
+	cout << counter[2].count << endl;
 
 }

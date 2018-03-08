@@ -25,6 +25,11 @@ struct counter_temp {
 void questionOne();
 int questionTwo();
 void insertSort(int number);
-void realMergeSort(int a, int b);
-void mergeSort(int a, int b);
+void mergeSort(int number);
+void MergeSort(int s, int e);
+void Merge(int s, int m, int e);
+void shellSort(int number);
+void radixSort(int number);
+int countMaxBit(int number);
+void heapSort(int number);
 #endif // !_MAIN_H__
