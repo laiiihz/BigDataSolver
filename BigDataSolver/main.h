@@ -21,6 +21,13 @@ struct counter_temp {
 	int count;
 };
 
+struct user_list {
+	string user_id;
+	string password;
+	int my_count;
+	struct user_list* next;
+};
+
 
 void questionOne();
 int questionTwo();

@@ -204,27 +204,56 @@ void heapSort(int number){
 
 }
 
+void questionFour() {
 
+}
 
 int main(void) {
 	//第一题开始
 	//questionOne();
 	//第二题开始
-	int a=questionTwo();
-	cout << a << endl;
-	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+	//int a=questionTwo();
+	//cout << a << endl;
+	/*high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	//insertSort(a);
 	//quickSort(a);
 	//cout<<"max_bit"<<countMaxBit(a);
 	//shellSort(a);
 	//radixSort(a);
-	mergeSort(a);
+	//mergeSort(a);
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	cout << "in seconds time:";
 	duration<double, ratio<1, 1>> duration_s(t2 - t1);
 	cout << duration_s.count() << " seconds" << std::endl;
 	cout << counter[0].count << endl;
 	cout << counter[1].count << endl;
-	cout << counter[2].count << endl;
+	cout << counter[2].count << endl;*/
 
+	/*Question 4*/
+	struct user_list *list_user_head=new user_list;
+	list_user_head->next = NULL;
+	list_user_head->my_count = -1;
+	list_user_head->password = "\0";
+	list_user_head->user_id = "\0";
+	ifstream file_read_user("user.txt", ios::in);
+	if (!file_read_user) {
+		cout << "WARING: read \'user.txt\' wrong" << endl;
+		return 0;
+	}
+	struct user_list *temp_list =list_user_head;
+	
+	int i = 0;
+	while (!file_read_user.eof()) {
+		string one_line;
+		getline(file_read_user, one_line);
+		struct user_list *point_user_list=new user_list;
+		point_user_list->my_count = i;
+		point_user_list->password = one_line.substr(one_line.find('\t')+1);
+		point_user_list->user_id =one_line.substr(0,one_line.find('\t')) ;
+		point_user_list->next = NULL;
+		temp_list->next = point_user_list;
+		temp_list = temp_list->next;
+		i++;
+	}
+	temp_list = list_user_head;
 }
