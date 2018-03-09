@@ -6,6 +6,9 @@
 #include<Windows.h>
 #include<iomanip>
 #include<fstream>
+#include <chrono>
+#include <ratio>
+#include <random>
 using namespace std;
 
 struct user {

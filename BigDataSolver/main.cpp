@@ -1,6 +1,5 @@
 #include "main.h"
-#include <chrono>
-#include <ratio>
+
 using namespace std;
 using namespace chrono;
 
@@ -229,18 +228,16 @@ int main(void) {
 	cout << counter[1].count << endl;
 	cout << counter[2].count << endl;*/
 
+
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	/*Question 4*/
-	struct user_list *list_user_head=new user_list;
-	list_user_head->next = NULL;
-	list_user_head->my_count = -1;
-	list_user_head->password = "\0";
-	list_user_head->user_id = "\0";
+	struct user_list list_user_head = {"\0","\0",-1,NULL};
 	ifstream file_read_user("user.txt", ios::in);
 	if (!file_read_user) {
 		cout << "WARING: read \'user.txt\' wrong" << endl;
 		return 0;
 	}
-	struct user_list *temp_list =list_user_head;
+	struct user_list *temp_list =&list_user_head;
 	
 	int i = 0;
 	while (!file_read_user.eof()) {
@@ -255,5 +252,22 @@ int main(void) {
 		temp_list = temp_list->next;
 		i++;
 	}
-	temp_list = list_user_head;
+	//using list_user_head to use list
+	random_device rd;	//real radom numbers generator
+	for (int i = 0; i < 2000; i++) {
+		unsigned int random_number = rd() % 1230000;
+		user_list *point=&list_user_head;
+		point = point->next;
+		while (point->next != NULL) {
+			if (atoi(point->user_id.c_str()) == random_number) {
+				if(i%50==0)cout << "find!\tid:" << point->user_id << "\t\tpsw:" << point->password << endl;
+				break;
+			}
+			point = point->next;
+		}
+		if(point->next==NULL)cout << "not find" << endl;
+	}
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	duration<double, ratio<1, 1>> duration_s(t2 - t1);
+	cout << duration_s.count() << " seconds" << std::endl;
 }
