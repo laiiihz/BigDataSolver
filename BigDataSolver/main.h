@@ -3,22 +3,24 @@
 #define _MAIN_H__
 #include<iostream>
 #include<string>
-#include<Windows.h>
+#include<Windows.h>	//提供暂停函数Sleep()
 #include<iomanip>
-#include<fstream>
-#include <chrono>
+#include<fstream>	//提供文件操作函数
+#include <chrono>	//提供计时函数
 #include <ratio>
-#include <random>
+#include <random>	//提供随机数函数
 using namespace std;
 
 struct user {
 	string user_id;
 	string password;
 }user[1230000];
+
 struct counter {
 	string password;
 	int count;
 }counter[1230000],temp;
+
 struct counter_temp {
 	string password;
 	int count;
