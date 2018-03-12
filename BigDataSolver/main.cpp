@@ -265,13 +265,15 @@ void heapSort(int number){
 
 }
 
-void insertTwoBitNode(user_two_bit_node **root,int id,string user_password) {
+void insertTwoBitNode(user_two_bit_node ** root,int id,string user_password) {
 	user_two_bit_node *temp = NULL;
 	if (!(*root)) {
 		temp = new user_two_bit_node;
-		temp->lchind = temp->rchind = NULL;
+		temp->lchind = NULL;
+		temp->rchind = NULL;
 		temp->user_id = id;
 		temp->password = user_password;
+		*root = temp;
 		return;
 	}
 	if (id < (*root)->user_id) {
@@ -280,6 +282,20 @@ void insertTwoBitNode(user_two_bit_node **root,int id,string user_password) {
 	else if (id > (*root)->user_id) {
 		insertTwoBitNode(&(*root)->rchind, id, user_password);
 	}
+}
+
+
+//binarySearch(二叉树指针,节点数据【用户账号ID】)
+//返回是否查找到	true for find ，false for not find
+int binarySearch(user_two_bit_node *root,int id) {
+	if (id==(root)->user_id )return id;
+	else if (id < (root)->user_id) {
+		binarySearch((root)->lchind,id);
+	}
+	else if (id > (root)->user_id) {
+		binarySearch((root)->rchind, id);
+	}
+	else return id+1000000;
 }
 
 int main(void) {
@@ -315,8 +331,10 @@ int main(void) {
 		cout << "WARING: read \'user.txt\' wrong" << endl;
 		return 0;
 	}
-	struct user_two_bit_node *root=NULL;
+	struct user_two_bit_node *root ;
+	root = NULL;
 	int i = 0;
+	
 	while (!file_read_user.eof()) {
 		string one_line;
 		getline(file_read_user, one_line);
@@ -324,6 +342,7 @@ int main(void) {
 		string temp_psw = one_line.substr(one_line.find('\t') + 1);
 		insertTwoBitNode(&root, temp_id, temp_psw);
 		i++;
+		if (i % 10000 == 0)cout << i << endl;
 	}
-
+	cout << binarySearch(root, 109010) << endl;
 }
