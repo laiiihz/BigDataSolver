@@ -36,6 +36,7 @@ struct user_list {
 
 void questionOne();
 int questionTwo();
+void questionFour();
 void insertSort(int number);
 void mergeSort(int number);
 void MergeSort(int s, int e);

@@ -144,9 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="questionTwo.cpp" />
-    <ClCompile Include="question_one.cpp" />
-    <ClCompile Include="源.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
