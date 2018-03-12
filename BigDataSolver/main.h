@@ -29,14 +29,21 @@ struct counter_temp {
 struct user_list {
 	string user_id;
 	string password;
-	int my_count;
 	struct user_list* next;
 };
 
+struct user_two_bit_node {
+	int user_id;
+	string password;
+	struct user_two_bit_node *lchind;
+	struct user_two_bit_node *rchind;
+	struct user_two_bit_node *parent;
+};
 
 void questionOne();
 int questionTwo();
 void questionFour();
+void insertTwoBitNode(user_two_bit_node **root, int id, string user_password);
 void insertSort(int number);
 void mergeSort(int number);
 void MergeSort(int s, int e);

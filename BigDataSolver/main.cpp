@@ -73,7 +73,7 @@ int questionTwo() {
 void questionFour() {
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	/*Question 4*/
-	struct user_list list_user_head = { "\0","\0",-1,NULL };
+	struct user_list list_user_head = { "\0","\0",NULL };
 	ifstream file_read_user("user.txt", ios::in);
 	if (!file_read_user) {
 		cout << "WARING: read \'user.txt\' wrong" << endl;
@@ -82,12 +82,11 @@ void questionFour() {
 	struct user_list *temp_list = &list_user_head;
 
 	int i = 0;
-	int data_size = 200;
+	int data_size = 200;				//修改随机数据大小
 	while (!file_read_user.eof()) {
 		string one_line;
 		getline(file_read_user, one_line);
 		struct user_list *point_user_list = new user_list;
-		point_user_list->my_count = i;
 		point_user_list->password = one_line.substr(one_line.find('\t') + 1);
 		point_user_list->user_id = one_line.substr(0, one_line.find('\t'));
 		point_user_list->next = NULL;
@@ -266,6 +265,23 @@ void heapSort(int number){
 
 }
 
+void insertTwoBitNode(user_two_bit_node **root,int id,string user_password) {
+	user_two_bit_node *temp = NULL;
+	if (!(*root)) {
+		temp = new user_two_bit_node;
+		temp->lchind = temp->rchind = NULL;
+		temp->user_id = id;
+		temp->password = user_password;
+		return;
+	}
+	if (id < (*root)->user_id) {
+		insertTwoBitNode(&(*root)->lchind, id, user_password);
+	}
+	else if (id > (*root)->user_id) {
+		insertTwoBitNode(&(*root)->rchind, id, user_password);
+	}
+}
+
 int main(void) {
 	//第一题开始
 	//questionOne();
@@ -289,4 +305,25 @@ int main(void) {
 
 
 	//questionFour();
+
+
+
+
+	//question 5
+	ifstream file_read_user("user.txt", ios::in);
+	if (!file_read_user) {
+		cout << "WARING: read \'user.txt\' wrong" << endl;
+		return 0;
+	}
+	struct user_two_bit_node *root=NULL;
+	int i = 0;
+	while (!file_read_user.eof()) {
+		string one_line;
+		getline(file_read_user, one_line);
+		int temp_id = atoi(one_line.substr(0, one_line.find('\t')).c_str());
+		string temp_psw = one_line.substr(one_line.find('\t') + 1);
+		insertTwoBitNode(&root, temp_id, temp_psw);
+		i++;
+	}
+
 }
