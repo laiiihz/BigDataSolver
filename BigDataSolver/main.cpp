@@ -51,7 +51,6 @@ void questionOne() {
 	}
 	cout << 111;
 }
-
 int questionTwo() {
 	ifstream file_read("password.txt", ios::in);
 	if (!file_read) {
@@ -69,7 +68,6 @@ int questionTwo() {
 	}
 	return i - 1;
 }
-
 void questionFour() {
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	/*Question 4*/
@@ -139,7 +137,6 @@ void questionFour() {
 	duration<double, ratio<1, 1>> duration_s(t2 - t1);
 	cout << duration_s.count() << " seconds" << std::endl;
 }
-
 void questionFive() {
 	ifstream file_read_user("user.txt", ios::in);
 	if (!file_read_user) {
@@ -182,7 +179,6 @@ void questionFive() {
 	cout << find << " " << not_find << endl;		//输出查找结果
 
 }
-
 void questionSix() {
 	ifstream  file_read_user_sorted("user_sorted.txt", ios::in);
 	if (!file_read_user_sorted) {
@@ -396,14 +392,14 @@ int std_hash_string(string password){
 }
 
 int main() {
-	//questionOne();
+	questionOne();
 	//questionTwo();
 	//questionTree();
 	//questionFour();
 	//questionFive();
 	//questionSix();
 	
-	ifstream	file_read_psw("password.txt",ios::in);
+	/*ifstream	file_read_psw("password.txt",ios::in);
 	if (!file_read_psw) {
 		cout << "WARING: read \'password.txt\' wrong" << endl;
 		return 0;
@@ -412,7 +408,15 @@ int main() {
 	int i = 0;
 	while (!file_read_psw.eof()) {
 		string one_line;
-		pfh[]
-	}
+		getline(file_read_psw,one_line);
+		pfh[i].data = atoi(one_line.substr(one_line.find('\t')+1).c_str());
+		pfh[i].password_key = one_line.substr(0, one_line.find('\t'));
+		i++;
+		cout << i << endl;
+		if (i % 1000 == 0) {
+			system("cls");
+			cout << i / 380<< endl;
+		}
+	}*/
 
 }
