@@ -388,35 +388,66 @@ int binarySearch(int id, int i, int j) {
 
 int std_hash_string(string password){
 	hash<string> hash_string;
-	return hash_string(password);
+	return hash_string(password)%100000;
 }
 
 int main() {
-	questionOne();
+	//questionOne();
 	//questionTwo();
 	//questionTree();
 	//questionFour();
 	//questionFive();
 	//questionSix();
 	
-	/*ifstream	file_read_psw("password.txt",ios::in);
+	ifstream	file_read_psw("password.txt",ios::in);
 	if (!file_read_psw) {
 		cout << "WARING: read \'password.txt\' wrong" << endl;
 		return 0;
 	}
 
+	
+
 	int i = 0;
 	while (!file_read_psw.eof()) {
 		string one_line;
 		getline(file_read_psw,one_line);
-		pfh[i].data = atoi(one_line.substr(one_line.find('\t')+1).c_str());
-		pfh[i].password_key = one_line.substr(0, one_line.find('\t'));
+		int temp_data = atoi(one_line.substr(one_line.find('\t')+1).c_str());
+		string temp_password_key = one_line.substr(0, one_line.find('\t'));
+		int temp_int = std_hash_string(temp_password_key);
+		pfh[temp_int].data = temp_data;
+		pfh[temp_int].password_key = temp_password_key;
 		i++;
-		cout << i << endl;
 		if (i % 1000 == 0) {
 			system("cls");
 			cout << i / 380<< endl;
 		}
-	}*/
+	}
+	int find=0;
+	int not_find=0;
+	random_device rd;
+	for (int q = 0; q < 2000; q++) {
+		string random_in_string = pfh[rd()%100000].password_key;
+		int temp_int = std_hash_string(random_in_string);
+		int temp_data = pfh[temp_int].data;
+		int temp_key = std_hash_string(pfh[temp_int].password_key);
+		if (temp_int == temp_key && pfh[temp_int].data != 0) {
+			cout << pfh[temp_int].password_key << " " << temp_data << endl;
+			find++;
+		}
+	}
 
+	for (int q = 0; q < 1000; q++) {
+		string random_in_string = pfh[rd() % 100000].password_key;
+		random_in_string += "1habw;,.45r5";
+		int temp_int = std_hash_string(random_in_string);
+		int temp_data = pfh[temp_int].data;
+		int temp_key = std_hash_string(pfh[temp_int].password_key);
+		//cout << "temp_int" << temp_int<<" temp_key"<<temp_key<<endl;
+		//Sleep(700);
+		if (temp_int == temp_key && pfh[temp_int].data != 0) {
+			cout << pfh[temp_int].password_key << " " << temp_data << endl;
+			find++;
+		}
+	}
+	cout << find << " " << not_find;
 }

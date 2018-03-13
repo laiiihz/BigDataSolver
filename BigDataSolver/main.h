@@ -45,7 +45,7 @@ struct password_for_hash {
 	string password_key;
 	int data;
 };
-struct password_for_hash pfh[38000];
+struct password_for_hash pfh[100000];
 int user_sorted_int[1230000];
 
 
