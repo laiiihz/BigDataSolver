@@ -336,33 +336,26 @@ user_two_bit_node* binarySearch(user_two_bit_node *root,int id) {
 
 
 
-int main(void) {
-	//第一题开始
+int main() {
 	//questionOne();
-	//第二题开始
-	//int a=questionTwo();
-	//cout << a << endl;
-	/*high_resolution_clock::time_point t1 = high_resolution_clock::now();
-	//insertSort(a);
-	//quickSort(a);
-	//cout<<"max_bit"<<countMaxBit(a);
-	//shellSort(a);
-	//radixSort(a);
-	//mergeSort(a);
-	high_resolution_clock::time_point t2 = high_resolution_clock::now();
-	cout << "in seconds time:";
-	duration<double, ratio<1, 1>> duration_s(t2 - t1);
-	cout << duration_s.count() << " seconds" << std::endl;
-	cout << counter[0].count << endl;
-	cout << counter[1].count << endl;
-	cout << counter[2].count << endl;*/
-
-
+	//questionTwo();
+	//questionTree();
 	//questionFour();
+	//questionFive();
 
-
-
-
-	//question 5
-	questionFive();
+	ifstream  file_read_user_sorted("user_sorted.txt",ios::in);
+	if (!file_read_user_sorted) {
+		cout << "WARING: read \'user_sorted.txt\' wrong" << endl;
+		return 0;		//TODO 去掉0
+	}
+	//struct user_sorted_struct USS[1230000];
+	int i = 0;
+	while (!file_read_user_sorted.eof()) {
+		string one_line;
+		getline(file_read_user_sorted, one_line);
+		int temp_id = atoi(one_line.substr(0, one_line.find('\t')).c_str());
+		string temp_psw = one_line.substr(one_line.find('\t') + 1);
+		i++;
+		if (i % 10000 == 0)cout << i / 12300 << endl;
+	}
 }

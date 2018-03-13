@@ -40,6 +40,11 @@ struct user_two_bit_node {
 	struct user_two_bit_node *parent;
 };
 
+struct user_sorted_struct {
+	int user_id;
+	string password;
+}USS[1230000];
+
 void questionOne();
 int questionTwo();
 void questionFour();
