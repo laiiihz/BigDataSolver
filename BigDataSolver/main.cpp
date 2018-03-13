@@ -342,7 +342,7 @@ int main() {
 	//questionTree();
 	//questionFour();
 	//questionFive();
-
+	
 	ifstream  file_read_user_sorted("user_sorted.txt",ios::in);
 	if (!file_read_user_sorted) {
 		cout << "WARING: read \'user_sorted.txt\' wrong" << endl;
@@ -353,9 +353,15 @@ int main() {
 	while (!file_read_user_sorted.eof()) {
 		string one_line;
 		getline(file_read_user_sorted, one_line);
-		int temp_id = atoi(one_line.substr(0, one_line.find('\t')).c_str());
-		string temp_psw = one_line.substr(one_line.find('\t') + 1);
+		user_sorted_int[i] = atoi(one_line.c_str());
 		i++;
-		if (i % 10000 == 0)cout << i / 12300 << endl;
+		
+		if (i % 10000 == 0) {
+			system("cls");
+			cout << i / 12300 << endl;
+		}
 	}
+
+
+
 }
