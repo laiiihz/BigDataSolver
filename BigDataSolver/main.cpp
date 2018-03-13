@@ -139,6 +139,44 @@ void questionFour() {
 	cout << duration_s.count() << " seconds" << std::endl;
 }
 
+void questionFive() {
+	ifstream file_read_user("user.txt", ios::in);
+	if (!file_read_user) {
+		cout << "WARING: read \'user.txt\' wrong" << endl;
+		return ;
+	}
+	struct user_two_bit_node *root;
+	root = NULL;
+	int i = 0;
+
+	while (!file_read_user.eof()) {
+		string one_line;
+		getline(file_read_user, one_line);
+		int temp_id = atoi(one_line.substr(0, one_line.find('\t')).c_str());
+		string temp_psw = one_line.substr(one_line.find('\t') + 1);
+		insertTwoBitNode(&root, temp_id, temp_psw);
+		i++;
+		if (i % 10000 == 0)cout << i << endl;
+	}
+	int a = 0;
+	int find = 0;
+	int not_find = 0;
+	int data_size = 2000;
+	random_device rd;
+	for (int j = 0; j < data_size; j++) {
+		unsigned int random_number = rd() % 1230000;
+		if (binarySearch(root, random_number) != NULL)find++;
+		else not_find++;
+	}
+	for (int j = 0; j < data_size; j++) {
+		unsigned int random_number = rd() % 1230000 + 2000000;
+		if (binarySearch(root, random_number) != NULL)find++;
+		else not_find++;
+	}
+	cout << find << " " << not_find << endl;		//输出查找结果
+
+}
+
 void insertSort(int number) {
 	for (int i = 1; i < number; i++) {
 		int nowCount = counter[i].count;
@@ -326,39 +364,5 @@ int main(void) {
 
 
 	//question 5
-	ifstream file_read_user("user.txt", ios::in);
-	if (!file_read_user) {
-		cout << "WARING: read \'user.txt\' wrong" << endl;
-		return 0;
-	}
-	struct user_two_bit_node *root ;
-	root = NULL;
-	int i = 0;
-	
-	while (!file_read_user.eof()) {
-		string one_line;
-		getline(file_read_user, one_line);
-		int temp_id = atoi(one_line.substr(0, one_line.find('\t')).c_str());
-		string temp_psw = one_line.substr(one_line.find('\t') + 1);
-		insertTwoBitNode(&root, temp_id, temp_psw);
-		i++;
-		if (i % 10000 == 0)cout << i << endl;
-	}
-	int a = 0;
-	int find=0;
-	int not_find=0;
-	int data_size = 2000;
-	random_device rd;
-	for (int j = 0; j < data_size; j++) {
-		unsigned int random_number = rd() % 1230000;
-		if ( binarySearch(root, random_number)!=NULL)find++;
-		else not_find++;
-	}
-	for (int j = 0; j < data_size; j++) {
-		unsigned int random_number = rd() % 1230000+2000000;
-		if (binarySearch(root, random_number)!=NULL)find++;
-		else not_find++;
-	}
-	cout << find << " " << not_find << endl;		//输出查找结果
-
+	questionFive();
 }

@@ -43,7 +43,9 @@ struct user_two_bit_node {
 void questionOne();
 int questionTwo();
 void questionFour();
+void questionFive();
 void insertTwoBitNode(user_two_bit_node **root, int id, string user_password);
+user_two_bit_node* binarySearch(user_two_bit_node *root, int id);
 void insertSort(int number);
 void mergeSort(int number);
 void MergeSort(int s, int e);
