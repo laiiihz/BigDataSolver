@@ -65,4 +65,5 @@ void shellSort(int number);
 void radixSort(int number);
 int countMaxBit(int number);
 void heapSort(int number);
+int std_hash_string(string password);
 #endif // !_MAIN_H__
