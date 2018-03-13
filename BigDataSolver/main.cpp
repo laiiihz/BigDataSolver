@@ -98,6 +98,7 @@ void questionFour() {
 	random_device rd;	//real radom numbers generator
 	int find = 0;
 	int not_find = 0;
+
 	for (int i = 0; i < data_size; i++) {
 		unsigned int random_number = rd() % 1230000;
 		user_list *point = &list_user_head;
@@ -163,6 +164,7 @@ void questionFive() {
 	int not_find = 0;
 	int data_size = 2000;
 	random_device rd;
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 	for (int j = 0; j < data_size; j++) {
 		unsigned int random_number = rd() % 1230000;
 		if (binaryTreeSearch(root, random_number) != NULL)find++;
@@ -173,8 +175,52 @@ void questionFive() {
 		if (binaryTreeSearch(root, random_number) != NULL)find++;
 		else not_find++;
 	}
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	duration<double, ratio<1, 1>> duration_s(t2 - t1);
+	cout << duration_s.count() << " seconds" << std::endl;
+	cout << find << " " << not_find;
 	cout << find << " " << not_find << endl;		//输出查找结果
 
+}
+
+void questionSix() {
+	ifstream  file_read_user_sorted("user_sorted.txt", ios::in);
+	if (!file_read_user_sorted) {
+		cout << "WARING: read \'user_sorted.txt\' wrong" << endl;
+		return ;		
+	}
+	//struct user_sorted_struct USS[1230000];
+	int i = 0;
+	while (!file_read_user_sorted.eof()) {
+		string one_line;
+		getline(file_read_user_sorted, one_line);
+		user_sorted_int[i] = atoi(one_line.c_str());
+		i++;
+
+		if (i % 10000 == 0) {
+			system("cls");
+			cout << i / 12300 << endl;
+		}
+	}
+	int find = 0;
+	int not_find = 0;
+	int data_size = 2000;
+	random_device rd;
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+	for (int j = 0; j < data_size; j++) {
+		unsigned int random_number = rd() % 1230000;
+		if (binarySearch(random_number, 0, 1230000) != -1)find++;
+		else not_find++;
+	}
+	for (int j = 0; j < data_size; j++) {
+		unsigned int random_number = rd() % 1230000 + 2000000;
+		if (binarySearch(random_number, 0, 1230000) != -1)find++;
+		else not_find++;
+	}
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	duration<double, ratio<1, 1>> duration_s(t2 - t1);
+	cout << duration_s.count() << " seconds" << std::endl;
+	cout << find << " " << not_find;
 }
 
 void insertSort(int number) {
@@ -344,6 +390,10 @@ int binarySearch(int id, int i, int j) {
 	return -1;
 }
 
+int std_hash_string(string password){
+	hash<string> hash_string;
+	return hash_string(password);
+}
 
 int main() {
 	//questionOne();
@@ -351,43 +401,18 @@ int main() {
 	//questionTree();
 	//questionFour();
 	//questionFive();
+	//questionSix();
 	
-	ifstream  file_read_user_sorted("user_sorted.txt",ios::in);
-	if (!file_read_user_sorted) {
-		cout << "WARING: read \'user_sorted.txt\' wrong" << endl;
-		return 0;		//TODO 去掉0
+	ifstream	file_read_psw("password.txt",ios::in);
+	if (!file_read_psw) {
+		cout << "WARING: read \'password.txt\' wrong" << endl;
+		return 0;
 	}
-	//struct user_sorted_struct USS[1230000];
+
 	int i = 0;
-	while (!file_read_user_sorted.eof()) {
+	while (!file_read_psw.eof()) {
 		string one_line;
-		getline(file_read_user_sorted, one_line);
-		user_sorted_int[i] = atoi(one_line.c_str());
-		i++;
-		
-		if (i % 10000 == 0) {
-			system("cls");
-			cout << i / 12300 << endl;
-		}
+		pfh[]
 	}
-	int find = 0;
-	int not_find = 0;
-	int data_size = 2000;
-	random_device rd;
-	high_resolution_clock::time_point t1 = high_resolution_clock::now();
-	for (int j = 0; j < data_size; j++) {
-		unsigned int random_number = rd() % 1230000;
-		if (binarySearch(random_number,0,1230000)!=-1)find++;
-		else not_find++;
-	}
-	for (int j = 0; j < data_size; j++) {
-		unsigned int random_number = rd() % 1230000 + 2000000;
-		if (binarySearch(random_number, 0, 1230000)!=-1)find++;
-		else not_find++;
-	}
-	high_resolution_clock::time_point t2 = high_resolution_clock::now();
-	duration<double, ratio<1, 1>> duration_s(t2 - t1);
-	cout << duration_s.count() << " seconds" << std::endl;
-	cout << find <<" "<< not_find;
 
 }

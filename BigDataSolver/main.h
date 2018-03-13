@@ -9,6 +9,7 @@
 #include <chrono>	//提供计时函数
 #include <ratio>
 #include <random>	//提供随机数函数
+#include <functional>	//提供string hash计算函数
 using namespace std;
 
 struct user {
@@ -40,6 +41,11 @@ struct user_two_bit_node {
 	struct user_two_bit_node *parent;
 };
 
+struct password_for_hash {
+	string password_key;
+	int data;
+};
+struct password_for_hash pfh[38000];
 int user_sorted_int[1230000];
 
 
