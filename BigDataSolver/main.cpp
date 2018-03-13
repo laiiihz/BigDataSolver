@@ -165,12 +165,12 @@ void questionFive() {
 	random_device rd;
 	for (int j = 0; j < data_size; j++) {
 		unsigned int random_number = rd() % 1230000;
-		if (binarySearch(root, random_number) != NULL)find++;
+		if (binaryTreeSearch(root, random_number) != NULL)find++;
 		else not_find++;
 	}
 	for (int j = 0; j < data_size; j++) {
 		unsigned int random_number = rd() % 1230000 + 2000000;
-		if (binarySearch(root, random_number) != NULL)find++;
+		if (binaryTreeSearch(root, random_number) != NULL)find++;
 		else not_find++;
 	}
 	cout << find << " " << not_find << endl;		//输出查找结果
@@ -325,15 +325,24 @@ void insertTwoBitNode(user_two_bit_node ** root,int id,string user_password) {
 
 //binarySearch(二叉树指针,节点数据【用户账号ID】)
 //返回是否查找到	true for find ，false for not find
-user_two_bit_node* binarySearch(user_two_bit_node *root,int id) {
+user_two_bit_node* binaryTreeSearch(user_two_bit_node *root,int id) {
 	if (root == NULL)return NULL;
 	if (id == root->user_id)return root;
 	else if (id < root->user_id)
-		return binarySearch(root->lchind, id);
+		return binaryTreeSearch(root->lchind, id);
 	else if (id > root->user_id)
-		return binarySearch(root->rchind, id);
+		return binaryTreeSearch(root->rchind, id);
 }
 
+int binarySearch(int id, int i, int j) {
+	while (i<=j) {
+		int mid =(i + j) / 2;
+		if (user_sorted_int[mid] == id)return mid;
+		else if (user_sorted_int[mid] < id)i = mid + 1;
+		else j = mid - 1;
+	}
+	return -1;
+}
 
 
 int main() {
@@ -361,7 +370,24 @@ int main() {
 			cout << i / 12300 << endl;
 		}
 	}
-
-
+	int find = 0;
+	int not_find = 0;
+	int data_size = 2000;
+	random_device rd;
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+	for (int j = 0; j < data_size; j++) {
+		unsigned int random_number = rd() % 1230000;
+		if (binarySearch(random_number,0,1230000)!=-1)find++;
+		else not_find++;
+	}
+	for (int j = 0; j < data_size; j++) {
+		unsigned int random_number = rd() % 1230000 + 2000000;
+		if (binarySearch(random_number, 0, 1230000)!=-1)find++;
+		else not_find++;
+	}
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	duration<double, ratio<1, 1>> duration_s(t2 - t1);
+	cout << duration_s.count() << " seconds" << std::endl;
+	cout << find <<" "<< not_find;
 
 }
