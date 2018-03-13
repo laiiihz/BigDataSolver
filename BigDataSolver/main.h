@@ -3,11 +3,8 @@
 #define _MAIN_H__
 #include<iostream>
 #include<string>
-#include<Windows.h>	//提供暂停函数Sleep()
-#include<iomanip>
 #include<fstream>	//提供文件操作函数
 #include <chrono>	//提供计时函数
-#include <ratio>
 #include <random>	//提供随机数函数
 #include <functional>	//提供string hash计算函数
 using namespace std;

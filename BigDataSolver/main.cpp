@@ -69,9 +69,9 @@ int questionTwo() {
 	return i - 1;
 }
 void questionFour() {
-	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();		//计时起点
 	/*Question 4*/
-	struct user_list list_user_head = { "\0","\0",NULL };
+	struct user_list list_user_head = { "\0","\0",NULL };	//链表头指针
 	ifstream file_read_user("user.txt", ios::in);
 	if (!file_read_user) {
 		cout << "WARING: read \'user.txt\' wrong" << endl;
@@ -81,6 +81,8 @@ void questionFour() {
 
 	int i = 0;
 	int data_size = 200;				//修改随机数据大小
+
+	//文件读取放入链表
 	while (!file_read_user.eof()) {
 		string one_line;
 		getline(file_read_user, one_line);
@@ -92,14 +94,15 @@ void questionFour() {
 		temp_list = temp_list->next;
 		i++;
 	}
+	
 	//using list_user_head to use list
-	random_device rd;	//real radom numbers generator
+	random_device rd;	//随机数生成器
 	int find = 0;
 	int not_find = 0;
 
 	for (int i = 0; i < data_size; i++) {
-		unsigned int random_number = rd() % 1230000;
-		user_list *point = &list_user_head;
+		unsigned int random_number = rd() % 1230000;	//随机数
+		user_list *point = &list_user_head;	
 		point = point->next;
 		while (point->next != NULL) {
 			if (atoi(point->user_id.c_str()) == random_number) {
@@ -109,10 +112,14 @@ void questionFour() {
 			}
 			point = point->next;
 		}
+
+		//进度显示
 		if (i % (data_size / 10) == 0) {
 			system("cls");
 			cout << (i + 0.0) / 200 * 100 << "%" << endl;
 		}
+
+
 		if (point->next == NULL)cout << "not Find" << endl;
 	}
 	for (int i = 0; i < data_size; i++) {
@@ -416,6 +423,40 @@ void insertTwoBitNode(user_two_bit_node ** root,int id,string user_password) {
 	}
 }
 
+void undefineHuajiFunc() {
+	                                                                                    
+  /*
+                                                                                    
+                           .`_:~"";;=============;;;"~'_.                           
+                .~=x<ejjj43r==r===================r==x3cjyye<v=~.               
+                `"";=rrx<1[|or========================r(|/4Ixrr=;""`               
+               .'"=======;;y@v;=====================<@1;=======;"-.              
+             _"rrr=========x?=========================3r=========rr="_            
+          .'";;"""""""""";;;;=========================""""""""""""";;==;_          
+       "37w(7v'`__````````___-:~""===============;!)}}51;```````````____:~_..       
+     __rX8GGXP"_'':~~~~~~~~:'__```_"==========="`'T2AC8nv`_-':~~~~~~~:'-____-_.     
+     .."=v<Ix=;===============;;;;;=============;""rI!Ir;===============;;"";"      
+      "r====rrrrrrrrrrrr================================rrrrrrrrrrrrrr====r"     
+     :r==rxrrrrrrrrrrxxx=============================rxxxrrrrrrrxxxr======_    
+    .========rrrrrrrrr==============================rrrrrrr==========;    
+    `=======================================================.   
+    `========r====================================rr=======.   
+    .========xr===================================rv========.   
+     "========Iv===================================x<=======r"    
+     `=========<?r===============================r*<=======.    
+      -=========x1!r;==========================r!ex=========`     
+       -==========<j3x=====================x3jI==========`      
+        .;r=========v1jax==;===================rx3jev========;.       
+          :=r=========r<4j4!vr===;===========rvacjeIr=========r=-         
+           .~=r===========x!4yyje*Ivxrrrrrrrrrrrxv<3ejyje<x===========r;'           
+              _"=r=========;==rxI*34jyy{yy{999yyj43<vrr=========r="_             
+                .-"==================================r=="_.               
+                   .`~"==============================;"~`                   
+                        ._~";;=========================;;"~`.                       
+                              ..`_:~~"""""""""""~~:_`..                             
+                                                                                    
+*/
+}
 
 //binarySearch(二叉树指针,节点数据【用户账号ID】)
 //返回是否查找到	true for find ，false for not find
@@ -450,7 +491,7 @@ int main() {
 	//questionFour();
 	//questionFive();
 	//questionSix();
-	//questionSeven();
+	questionSeven();
 	
 	
 }
