@@ -287,16 +287,16 @@ void insertTwoBitNode(user_two_bit_node ** root,int id,string user_password) {
 
 //binarySearch(二叉树指针,节点数据【用户账号ID】)
 //返回是否查找到	true for find ，false for not find
-int binarySearch(user_two_bit_node *root,int id) {
-	if (id==(root)->user_id )return id;
-	else if (id < (root)->user_id) {
-		binarySearch((root)->lchind,id);
-	}
-	else if (id > (root)->user_id) {
-		binarySearch((root)->rchind, id);
-	}
-	else return id+1000000;
+user_two_bit_node* binarySearch(user_two_bit_node *root,int id) {
+	if (root == NULL)return NULL;
+	if (id == root->user_id)return root;
+	else if (id < root->user_id)
+		return binarySearch(root->lchind, id);
+	else if (id > root->user_id)
+		return binarySearch(root->rchind, id);
 }
+
+
 
 int main(void) {
 	//第一题开始
@@ -344,5 +344,21 @@ int main(void) {
 		i++;
 		if (i % 10000 == 0)cout << i << endl;
 	}
-	cout << binarySearch(root, 109010) << endl;
+	int a = 0;
+	int find=0;
+	int not_find=0;
+	int data_size = 2000;
+	random_device rd;
+	for (int j = 0; j < data_size; j++) {
+		unsigned int random_number = rd() % 1230000;
+		if ( binarySearch(root, random_number)!=NULL)find++;
+		else not_find++;
+	}
+	for (int j = 0; j < data_size; j++) {
+		unsigned int random_number = rd() % 1230000+2000000;
+		if (binarySearch(root, random_number)!=NULL)find++;
+		else not_find++;
+	}
+	cout << find << " " << not_find << endl;		//输出查找结果
+
 }
