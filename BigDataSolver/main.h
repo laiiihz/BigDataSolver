@@ -3,10 +3,13 @@
 #define _MAIN_H__
 #include<iostream>
 #include<string>
+#include <Windows.h>
 #include<fstream>	//提供文件操作函数
 #include <chrono>	//提供计时函数
 #include <random>	//提供随机数函数
 #include <functional>	//提供string hash计算函数
+#define MAXXX 1230000
+
 using namespace std;
 
 struct user {
@@ -22,6 +25,8 @@ struct counter {
 struct counter counter[1230000];
 struct counter temp;
 struct counter temp_counter[1230000];
+struct user *us = new struct user[MAXXX];
+struct counter *co = new struct counter[MAXXX];
 
 struct counter_temp {
 	string password;
@@ -46,12 +51,13 @@ struct password_for_hash {
 	string password_key;
 	int data;
 };
-struct password_for_hash pfh[100000];
+struct password_for_hash pfh[200000];
 int user_sorted_int[1230000];
 
 
 
 void questionOne();
+int openPassword();
 int questionTwo();
 void questionFour();
 void questionFive();
@@ -61,9 +67,18 @@ int binarySearch(int id,int i,int j);
 void insertSort(int number);
 void mergeSort(int low ,int high);
 void mergeAlgorithm(int low, int mid, int high);
-void shellSort(int number);
+void shellSort(struct counter c[],int number);
 void radixSort(int number);
 int countMaxBit(int number);
 void heapSort(int number);
 int std_hash_string(string password);
+
+
+//RUN SORT FUNCTION
+void RUN_BUBBLE();
+void RUN_SELECTION();
+void RUN_INSERT();
+void RUN_SHELL();
+void RUN_HEAP();
+void RUN_QUICK();
 #endif // !_MAIN_H__

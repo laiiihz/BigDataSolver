@@ -1,6 +1,15 @@
 #include "main.h"
+#define TIME high_resolution_clock::time_point	//时间对象
+#define TIME_NOW high_resolution_clock::now()	//现在的时间
 using namespace std;
 using namespace chrono;
+
+//void timeCount(时间开始，时间结束)
+//返回时间差
+void timeCount(TIME t1,TIME t2) {
+	duration<double, ratio<1, 1>> duration_s(t2 - t1);
+	cout<<"用时"<<duration_s.count()<<"秒"<<endl;
+}
 
 void questionOne() {
 	ifstream file_in("user.txt", ios::in);
@@ -51,6 +60,8 @@ void questionOne() {
 	}
 	cout << 111;
 }
+//返回password条数 
+/*by laiiihz*/
 int questionTwo() {
 	ifstream file_read("password.txt", ios::in);
 	if (!file_read) {
@@ -63,13 +74,31 @@ int questionTwo() {
 		getline(file_read, password_line);
 		counter[i].password = password_line.substr(0, password_line.find('\t'));
 		counter[i].count = atoi(password_line.substr(password_line.find('\t') + 1).c_str());
-		if (i % 1000 == 0)cout << counter[i].count << "\t" << counter[i].password << endl;
 		i++;
 	}
 	return i - 1;
 }
+
+//返回password条数
+/*by gta*/
+int openPassword() {
+	ifstream password("password.txt", ios::in);
+	if (!password) {
+		cout << "WARING: read \'password.txt\' wrong" << endl;
+		return 0;
+	}
+	int k = 0;
+	while (!password.eof()) {
+		string password_line;
+		getline(password, password_line);
+		co[k].password = password_line.substr(0, password_line.find('\t'));
+		co[k].count = atoi(password_line.substr(password_line.find('\t') + 1).c_str());
+		k++;
+	}
+	return k;
+}
 void questionFour() {
-	high_resolution_clock::time_point t1 = high_resolution_clock::now();		//计时起点
+	TIME t1 = TIME_NOW;		//计时起点
 	/*Question 4*/
 	struct user_list list_user_head = { "\0","\0",NULL };	//链表头指针
 	ifstream file_read_user("user.txt", ios::in);
@@ -252,8 +281,8 @@ void questionSeven() {
 	int find = 0;
 	int not_find = 0;
 	random_device rd;
-	for (int q = 0; q < 2000; q++) {
-		string random_in_string = pfh[rd() % 100000].password_key;
+	for (int q = 0; q < 1000000; q++) {
+		string random_in_string = pfh[rd() % 200000].password_key;
 		int temp_int = std_hash_string(random_in_string);
 		int temp_data = pfh[temp_int].data;
 		int temp_key = std_hash_string(pfh[temp_int].password_key);
@@ -264,7 +293,7 @@ void questionSeven() {
 	}
 
 	for (int q = 0; q < 1000; q++) {
-		string random_in_string = pfh[rd() % 100000].password_key;
+		string random_in_string = pfh[rd() % 200000].password_key;
 		random_in_string += "1habw;,.45r5";
 		int temp_int = std_hash_string(random_in_string);
 		int temp_data = pfh[temp_int].data;
@@ -306,12 +335,30 @@ void selectionSort(int number) {
 		counter[i] = temp;
 	}
 }
-
+void Bubblesort(int n) {
+	int i, j, k;
+	bool exchange;
+	struct counter temp;
+	for (i = 0; i < n - 1; i++) {
+		exchange = false;
+		for (j = n - 1; j > i; j--) {
+			if (co[j].count > co[j - 1].count) {
+				//temp.count = counter[j].count;
+				//temp.password = counter[j].password;
+				temp = co[j];
+				co[j] = co[j - 1];
+				//	counter[j - 1].count = temp.count;
+				//	counter[j - 1].password = temp.password;
+				co[j - 1] = temp;
+				exchange = true;
+			}
+		}
+		if (!exchange)return;
+	}
+}
 void mergeSort(int low, int high) {
-	if (low >= high)                 
-		return;                       
-	else {
-		int mid = (low + high) / 2;
+	if (low < high) {
+		int mid = low + (high - low) / 2;
 		mergeSort(low, mid);
 		mergeSort(mid + 1, high);
 		mergeAlgorithm(low, mid, high);
@@ -320,22 +367,65 @@ void mergeSort(int low, int high) {
 void mergeAlgorithm(int low,int mid,int high) {
 	int length_left = mid - low + 1;
 	int length_right = high - mid;
-	
-
-}
-void shellSort( int number) {
-	
-	if (number <= 1)return;
-	for (int div = number / 2; div >= 1; div = div / 2) {
-		for (int i = 0; i <= div; ++i) {
-			for (int j = i; j<number - div; j += div)
-				for (int k = j; k<number; k += div)
-					if (counter[j].count<counter[k].count) {
-						temp = counter[j];
-						counter[j] = counter[k];
-						counter[k] = temp;
-					}
+	struct counter *temp_left= new struct counter[length_left];
+	struct counter *temp_right = new struct counter[length_right];
+	for (int i = 0; i < length_left; i++) {
+		temp_left[i].count = counter[low + i].count;
+		temp_left[i].password = counter[low + i].password;
+	}
+	for (int i = 0; i < length_right; i++) {
+		temp_right[i].count = counter[mid + 1 + i].count;
+		temp_right[i].password = counter[mid + 1 + i].password;
+	}
+	int q = 0;
+	int w = 0;
+	int e = low;
+	while (q < length_left&&w < length_right) {
+		if (temp_right[q].count <= temp_left[w].count) {
+			counter[e].count = temp_left[q].count;
+			counter[e].password = temp_left[q].password;
+			q++;
 		}
+		else {
+			counter[e].count = temp_left[w].count;
+			counter[e].password = temp_left[w].password;
+			w++;
+		}
+		e++;
+		
+
+	}
+	while (q < length_left) {
+		counter[e].count = temp_left[q].count;
+		counter[e].password = temp_left[q].password;
+		q++;
+		e++;
+	}
+	while (w < length_right) {
+		counter[e].count = temp_right[w].count;
+		counter[e].password = temp_right[w].password;
+
+		w++;
+		e++;
+	}
+	delete[]temp_left;
+	delete[]temp_right;
+}
+void shellSort(struct counter c[],int number) {
+	struct counter temp;
+	int i, j, d;
+	d = number / 2;
+	while (d > 0) {
+		for (i = d; i < number; i++) {
+			temp = c[i];
+			j = i - d;
+			while (j >= 0 && temp.count > co[j].count) {
+				c[j + d] = c[j];
+				j -= d;
+			}
+			co[j + d] = temp;
+		}
+		d = d / 2;
 	}
 }
 
@@ -372,9 +462,54 @@ int countMaxBit(int number) {
 	return max_bit;
 }
 
-void heapSort(int number){
-
+void sift(int low, int high) {
+	int i = low, j = 2 * i;
+	struct counter temp = co[i];
+	while (j <= high) {
+		if (j<high&&co[j].count>co[j + 1].count)
+			j++;
+		if (temp.count>co[j].count) {
+			co[i] = co[j];
+			i = j;
+			j = 2 * i;
+		}
+		else break;
+	}
+	co[i] = temp;
 }
+void heapSort(int number) {
+	int i;
+	for (i = number / 2; i >= 0; i--)
+		sift(i, number);
+	for (i = number; i >= 1; i--) {
+		swap(co[0], co[i]);
+		sift(0, i - 1);
+	}
+}
+int partition(struct counter c[], int s, int t) {
+	int i = s, j = t;
+	struct counter temp = c[i];
+	while (i < j) {
+		while (j > i&&co[j].count <= temp.count) j--;
+		co[i] = co[j];
+		while (i < j&&co[i].count >= temp.count) i++;
+		co[j] = co[i];
+	}
+	c[i] = temp;
+	return i;
+}
+void quickSort(struct counter c[], int s, int t) {
+	int i;
+	if (s < t) {
+		i = partition(c, s, t);
+		quickSort(c, s, i - 1);
+		quickSort(c, i + 1, t);
+	}
+}
+
+
+
+
 
 void insertTwoBitNode(user_two_bit_node ** root,int id,string user_password) {
 	user_two_bit_node *temp = NULL;
@@ -520,12 +655,85 @@ int binarySearch(int id, int i, int j) {
 
 int std_hash_string(string password){
 	hash<string> hash_string;
-	return hash_string(password)%100000;
+	string for_hash= password + ",-!~";		//计算两次哈希值解决哈希冲突
+	return hash_string(password)%1000000+hash_string(for_hash)%1000000+100000;
+}
+
+void RUN_BUBBLE() {
+	int a = openPassword();
+	TIME t3s = TIME_NOW;
+	Bubblesort(a);
+	TIME t3e = TIME_NOW;
+	cout << "Bubble Sort Time:\t";
+	timeCount(t3s, t3e);
+}
+void RUN_SELECTION() {
+	int a = questionTwo();
+	TIME t2s = TIME_NOW;
+	selectionSort(a);
+	TIME t2e = TIME_NOW;
+	cout << "Selection Sort Time:\t";
+	timeCount(t2s, t2e);
+}
+void RUN_INSERT() {
+	int a = questionTwo();
+	TIME t1s = TIME_NOW;
+	insertSort(a);
+	TIME t1e = TIME_NOW;
+	cout << "Insert Sort Time:\t";
+	timeCount(t1s, t1e);
+}
+void RUN_SHELL() {
+	int a = openPassword();
+	TIME t4s = TIME_NOW;
+	shellSort(co, a);
+	TIME t4e = TIME_NOW;
+	cout << "Shell Sort Time :\t";
+	timeCount(t4s, t4e);
+}
+void RUN_HEAP() {
+	int a = openPassword();
+	TIME t5s = TIME_NOW;
+	heapSort(a);
+	TIME t5e = TIME_NOW;
+	cout << "Heap   Sort Time:\t";
+	timeCount(t5s, t5e);
+}
+void RUN_QUICK() {
+	int a = openPassword();
+	TIME t1s = TIME_NOW;
+	quickSort(co,0,a);
+	TIME t1e = TIME_NOW;
+	cout << "Quick Sort Time:\t";
+	timeCount(t1s, t1e);
+}
+void RUN_MERGE() {
+	int a = questionTwo();
+	TIME t1s = TIME_NOW;
+	mergeSort(0,a);
+	TIME t1e = TIME_NOW;
+	cout << "Merge Sort Time:\t";
+	timeCount(t1s, t1e);
+}
+
+void RUN_QUESTION_2() {
+	
+	//RUN_BUBBLE();
+	//RUN_SELECTION();
+	//RUN_INSERT();
+	//RUN_SHELL();
+	//RUN_HEAP();
+	//RUN_QUICK();
+	//RUN_MERGE();
+}
+
+void RUN_QUESTION_3() {
+
 }
 
 int main() {
 	//questionOne();
-	//questionTwo();
+	RUN_QUESTION_2();
 	//questionTree();
 	//questionFour();
 	//questionFive();
