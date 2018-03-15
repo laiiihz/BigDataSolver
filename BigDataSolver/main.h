@@ -17,7 +17,11 @@ struct user {
 struct counter {
 	string password;
 	int count;
-}counter[1230000],temp;
+};
+
+struct counter counter[1230000];
+struct counter temp;
+struct counter temp_counter[1230000];
 
 struct counter_temp {
 	string password;
@@ -55,9 +59,8 @@ void insertTwoBitNode(user_two_bit_node **root, int id, string user_password);
 user_two_bit_node* binaryTreeSearch(user_two_bit_node *root, int id);
 int binarySearch(int id,int i,int j);
 void insertSort(int number);
-void mergeSort(int number);
-void MergeSort(int s, int e);
-void Merge(int s, int m, int e);
+void mergeSort(int low ,int high);
+void mergeAlgorithm(int low, int mid, int high);
 void shellSort(int number);
 void radixSort(int number);
 int countMaxBit(int number);

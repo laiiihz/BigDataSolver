@@ -307,49 +307,21 @@ void selectionSort(int number) {
 	}
 }
 
-void Merge( int s, int m, int e){
-	int n1, n2;
-	n1 = m - s + 1;
-	n2 = e - m;
-	int *l = new int[n1 + 1];
-	int *h = new int[n2 + 1];
-	int temp = s;
-	for (int i = 0; i<n1; i++)
-	{
-		l[i] = counter[temp++].count;
+void mergeSort(int low, int high) {
+	if (low >= high)                 
+		return;                       
+	else {
+		int mid = (low + high) / 2;
+		mergeSort(low, mid);
+		mergeSort(mid + 1, high);
+		mergeAlgorithm(low, mid, high);
 	}
-	temp = m + 1;
-	for (int i = 0; i<n2; i++)
-	{
-		h[i] = counter[temp++].count;
-	}
-	for (int i = 0, j = 0, k = s; k <= e; k++)
-	{
-		if (l[i] >= h[j])
-		{
-			counter[k].count = l[i++];
-
-		}
-		else
-		{
-			counter[k].count = h[j++];
-		}
-	}
-	delete[] l;
-	delete[] h;
-
 }
-void MergeSort( int s, int e){
-	if (e>s){
-		int p = (s + e) / 2;
-		MergeSort( s, p);
-		MergeSort( p + 1, e);
-		Merge( s, p, e);
-	}
+void mergeAlgorithm(int low,int mid,int high) {
+	int length_left = mid - low + 1;
+	int length_right = high - mid;
+	
 
-}
-void mergeSort(int number) {
-	MergeSort(0, number);
 }
 void shellSort( int number) {
 	
@@ -558,7 +530,7 @@ int main() {
 	//questionFour();
 	//questionFive();
 	//questionSix();
-	questionSeven();
+	//questionSeven();
 	
 	
 }
