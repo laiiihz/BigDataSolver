@@ -13,20 +13,21 @@
 using namespace std;
 
 struct user {
-	string user_id;
+	int user_id;
 	string password;
-}user[1230000];
+};
 
 struct counter {
 	string password;
 	int count;
-};
+}user[MAXXX];
 
 struct counter counter[1230000];
 struct counter temp;
 struct counter temp_counter[1230000];
 struct user *us = new struct user[MAXXX];
 struct counter *co = new struct counter[MAXXX];
+struct counter *users = new struct counter[MAXXX];
 
 struct counter_temp {
 	string password;
@@ -57,7 +58,7 @@ int user_sorted_int[1230000];
 
 
 void questionOne();
-int openPassword();
+int openPassword(string FILE_READS);
 int questionTwo();
 void questionFour();
 void questionFive();
@@ -68,8 +69,6 @@ void insertSort(int number);
 void mergeSort(int low ,int high);
 void mergeAlgorithm(int low, int mid, int high);
 void shellSort(struct counter c[],int number);
-void radixSort(int number);
-int countMaxBit(int number);
 void heapSort(int number);
 int std_hash_string(string password);
 
@@ -81,4 +80,11 @@ void RUN_INSERT();
 void RUN_SHELL();
 void RUN_HEAP();
 void RUN_QUICK();
+
+void RUN_BUBBLE_REVERSE();
+void RUN_SELECTION_REVERSE();
+void RUN_INSERT_REVERSE();
+void RUN_SHELL_REVERSE();
+void RUN_HEAP_REVERSE();
+void RUN_QUICK_REVERSE();
 #endif // !_MAIN_H__

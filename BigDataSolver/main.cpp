@@ -5,11 +5,21 @@ using namespace std;
 using namespace chrono;
 
 //void timeCount(时间开始，时间结束)
-//返回时间差
+
 void timeCount(TIME t1,TIME t2) {
 	duration<double, ratio<1, 1>> duration_s(t2 - t1);
 	cout<<"用时"<<duration_s.count()<<"秒"<<endl;
 }
+
+//返回时间差
+int timeCountReturn(TIME t1, TIME t2) {
+	duration<double, ratio<1, 1>> duration_s(t2 - t1);
+	return duration_s.count();
+}
+
+
+
+
 
 void questionOne() {
 	ifstream file_in("user.txt", ios::in);
@@ -79,12 +89,29 @@ int questionTwo() {
 	return i - 1;
 }
 
+int questionTwo_CP() {
+	ifstream file_read("user.txt", ios::in);
+	if (!file_read) {
+		cout << "WARING: read \'user.txt\' wrong" << endl;
+		return 0;
+	}
+	int i = 0;
+	while (!file_read.eof()) {
+		string password_line;
+		getline(file_read, password_line);
+		users[i].password = password_line.substr(password_line.find('\t') + 1);
+		users[i].count = atoi(password_line.substr(0, password_line.find('\t')).c_str());
+		i++;
+	}
+	return i - 1;
+}
+
 //返回password条数
 /*by gta*/
-int openPassword() {
-	ifstream password("password.txt", ios::in);
+int openPassword(string FILE_READS) {
+	ifstream password(FILE_READS, ios::in);
 	if (!password) {
-		cout << "WARING: read \'password.txt\' wrong" << endl;
+		cout << "WARING: read "<< FILE_READS<<" wrong" << endl;
 		return 0;
 	}
 	int k = 0;
@@ -97,6 +124,39 @@ int openPassword() {
 	}
 	return k;
 }
+
+int openPassword_CP(string FILE_READS) {
+	ifstream password(FILE_READS, ios::in);
+	if (!password) {
+		cout << "WARING: read " << FILE_READS << " wrong" << endl;
+		return 0;
+	}
+	int k = 0;
+	while (!password.eof()) {
+		string password_line;
+		getline(password, password_line);
+		co[k].password = password_line.substr(password_line.find('\t') + 1);
+		co[k].count = atoi(password_line.substr(0, password_line.find('\t')).c_str());
+		k++;
+	}
+	return k;
+}
+
+void fileOutPut() {
+	ofstream file_out("user_sorted.txt", ios::out);
+	if (!file_out) {
+		cout << "WARING: write \'password.txt\' wrong" << endl;
+		return;
+	}
+	int a = 0;
+	while (a<100) {
+		file_out <<users[a].count << endl;
+		a++;
+	}
+}
+
+
+//排序函数
 void questionFour() {
 	TIME t1 = TIME_NOW;		//计时起点
 	/*Question 4*/
@@ -335,21 +395,21 @@ void selectionSort(int number) {
 		counter[i] = temp;
 	}
 }
-void Bubblesort(int n) {
+void Bubblesort(struct counter c[],int n) {
 	int i, j, k;
 	bool exchange;
 	struct counter temp;
 	for (i = 0; i < n - 1; i++) {
 		exchange = false;
 		for (j = n - 1; j > i; j--) {
-			if (co[j].count > co[j - 1].count) {
+			if (c[j].count > c[j - 1].count) {
 				//temp.count = counter[j].count;
 				//temp.password = counter[j].password;
-				temp = co[j];
-				co[j] = co[j - 1];
+				temp = c[j];
+				c[j] = c[j - 1];
 				//	counter[j - 1].count = temp.count;
 				//	counter[j - 1].password = temp.password;
-				co[j - 1] = temp;
+				c[j - 1] = temp;
 				exchange = true;
 			}
 		}
@@ -428,40 +488,35 @@ void shellSort(struct counter c[],int number) {
 		d = d / 2;
 	}
 }
-
-//not finish
-void radixSort(int number){
-	int max_bit = countMaxBit(number);
-	int bucket[10][10] = { 0 };
-	int order[10] = { 0 };
-	for (int r = 1; max_bit>0; max_bit--, r *= 10) {
-		for (int i = 0; i<number; i++) {
-			int lsd = (counter[i].count / r) % 10;
-			bucket[lsd][order[lsd]++] = counter[i].count;
-		}
-		int k = 0;
-		for (int i = 0; i<10; i++) {
-			if (order[i] != 0) {
-				for (int j = 0; j<order[i]; j++)
-					counter[k++].count = bucket[i][j];
-			}
-			order[i] = 0;
-		}
-	}
+int getMax(struct counter c[], int number) {
+	int i, max;
+	max = c[0].count;
+	for (i = 1; i < number; i++)
+		if (c[i].count> max)
+			max = c[i].count;
+	return max;
 }
-
-int countMaxBit(int number) {
-	int max_bit=1;
-	int multi = 10;
-	for (int i = 0; i < number;i++) {
-		while (counter[i].count >= multi) {
-			multi *= 10;
-			max_bit++;
-		}
+void countSort(struct counter c[], int number, int exp) {    
+	struct counter *output;
+	output= new struct counter[number];
+	int i, buckets[10] = { 0 };
+	for (i = 0; i < number; i++)
+		buckets[(c[i].count/ exp) % 10] ++;
+	for (i = 1; i < 10; i++)
+		buckets[i] += buckets[i - 1];
+	for (i = number - 1; i >= 0; i--) {
+		output[buckets[(c[i].count/ exp) % 10] - 1] = c[i];
+		buckets[(c[i].count / exp) % 10] --;
 	}
-	return max_bit;
+	for (i = 0; i < number; i++)
+		c[i] = output[i];
 }
-
+void radixSort(struct counter c[], int number) {     //基数排序 
+	int exp;
+	int max = getMax(c, number);
+	for (exp = 1; max / exp > 0; exp *= 10)
+		countSort(c, number, exp);
+}
 void sift(int low, int high) {
 	int i = low, j = 2 * i;
 	struct counter temp = co[i];
@@ -507,10 +562,7 @@ void quickSort(struct counter c[], int s, int t) {
 	}
 }
 
-
-
-
-
+//
 void insertTwoBitNode(user_two_bit_node ** root,int id,string user_password) {
 	user_two_bit_node *temp = NULL;
 	if (!(*root)) {
@@ -530,107 +582,7 @@ void insertTwoBitNode(user_two_bit_node ** root,int id,string user_password) {
 	}
 }
 
-void undefineHuajiFunc() {
-	                                                                                    
-  /*
-                                                                                    
-                                                                                                                                                       
-                                                                                                                                             
-                                                            .....```````````......                                                           
-                                                 ..``-~~"";;======================;;"""~_`..                                                 
-                                  .....    .._~";============================================;"~`.     ....                                  
-                             ~rayP([AAK[(Ljevr==================================================xIe9Z/EA22[(P9!='                            
-                           ~v?Ir===xI*e{oABMVS7r;=============================================IPpJJBK59eaIxr=rx!3v~                          
-                           `.  `:";===;;;=rvZ&O|3;===========================================j&0B7v==;;;==;;"'.  .`                          
-                           .:;=rr===========;*pVG;==========================================rp|BI;===========r=="-.                          
-                        .~;===================XM3;==========================================={bG;================r="-.                       
-                      _"=rr===================?<==============================================3!======================"`                     
-                   .:=rrr============================================================================================rr=;_                   
-                ..:;;""""~~~~~~~~~~~~~~~~""""";;;====================================;=====;"~"""~~~~~~~~~~~~~~~~""""";;==;-                 
-            .;vjlw(5cx"`_________________________-:~"";============================;relw}w){<=``_________________________'~"-..              
-         .`-ep6CAKEEA6[=`______________________________'~";=====================;"-r[2K[u[EA6XI______________________________-__`.           
-        _'-'eXA[u/[[AGE=`_______---''''''---_______________"==================="```rCC[///[KGX<_________--'''''''---___________'--_.         
-        .`_`'relw}}PL3=~"""";;;=============;;;;"""~~''':~";===================;~''_;*Tw(((Z1r~"""";;;;;============;;;"""~~:'':~:.          
-           ~=;;==rr==;==============================================================;;;=rrr=;=====================================-          
-          ~=========rrrrrrrrrrrrrrrrr================================================================rrrrrrrrrrrrrrrrrr============-         
-         _======rrrrrrrrrrrrrrrrrrrrrrrr==========================================================rrrxrrrrrrrrrrrrrrrrrrrr==========`        
-        .=======xxrrrrrrrrrrrrrrrrrrrxxxr========================================================rxxrrrrrrrrrrrrrrrrrrxxxxr=========;.       
-        ~r=======rrrrrrrrrrrrrrrrrrrrrr============================================================rrrrrrrrrrrrrrrrrrrrrr============-       
-       .;===================rr=======================================================================================================".      
-       `==============================================================================================================================.      
-       _==============================================================================================================================`      
-       _=============r==================================================================================================r=============`      
-       _=============rI================================================================================================vx=============`      
-       .==============v!==============================================================================================v<=============;.      
-       ."==============<3============================================================================================!3==============~       
-        `===============!{r;=======================================================================================r13===============.       
-         "===============v7*======================================================================================<7I===============:        
-         ."===============r9fv==================================================================================v7yr===============".        
-          .;================<)9v==============================================================================Is7<===============r"          
-           ."r================?)L<r========================================================================ralZa================r"           
-            ."=================ra5Pcv===================================================================rIyoL<==================~            
-              _=================;=vy}Z4vr============================================================rIjP)1x==================;_             
-               ."===================r<sP)9*xr====================================================rv3Tw)jIr===================~.              
-                 `"====================rI1lwo93Ixr==========================================rx<4fww7evr=;==================".                
-                   _"=r====================r<cLP}o7c3Ixrr============================rrv<3yLP})s3vr======================"`                  
-                     `"=rr==================;==rv!e95P}wolTy43?!IIvvvvvvvvvII<*3ej{75P}wwly3Ixr======================r=~.                    
-                       .:;===========================rxI*ej97l5PwPwwww}}}}}}wwP)LT{13<vrr========================rr="-.                      
-                          `~;=================================rrrxxxxxxxxxxxrrrr=====;;========================r=;:.                         
-                             .:"==========================================================================rr=="-.                            
-                                .`~;======================================================================"~`.                               
-                                    .`:";============================================================;"-`.                                   
-                                         .`'~";====rr====================================rr====;"~-..                                        
-                                               ..`'~"";;===============================;""~'`..                                              
-                                                       ...``__'~~~~"""""""~~~~:-__`....                                                      
-                                                                                                  
-                                                                                    
-*/
 
-
-/*
-
-                          .~xyAp$$p/e=_                                                                                                      
-                       ~IKN#%%%%%%%%%Wh|s=.           .`_-~"~""""""""""""""""""~~:__.                    .'";;"~`                            
-                    ~wW%%%%%%%%%%%%%%%%%%%%JI..'";=r==;;"~-_....             ...`-~";===r=;~`       "IubW%%%%%%%%%h|s=`                      
-                   e%%%%%%%%%%%%%%%%%%%%%%%%%Pr="_.                                     ._";rrr;-~yQ%%%%%%%%%%%%%%%%%%WBr                    
-                  3%%%%%%%%%%%%%%%%%%%%%%U7=.                                                 `"=lW%%%%%%%%%%%%%%%%%%%%%%@"                  
-                 _W%%%%%%%%%%%%%%%%%%%W};                                                          "9U%%%%%%%%%%%%%%%%%%%%W~                 
-                 v%%%%%%%%%%%%%%%%%%W3`                                                               =B%%%%%%%%%%%%%%%%%%%B                 
-                 =%%%%%%%%%%%%%%%%%7.                                                                   ;|%%%%%%%%%%%%%%%%%h`                
-                  [%%%%%%%%%%%%%%Wr                              __.        ._`                           vW%%%%%%%%%%%%%%%h.                
-                   xb%%%%%%%%%%%Q"                          `"I7wT9<"_   -;;=PQBI-                         ~b%%%%%%%%%%%%%%y                 
-                     ;}W%%%%%%%K.                    ."=x<jw/wZZlLEPI"  ."rr=;=v!fe=`                       .p%%%%%%%%%%%#3                  
-                       .=(h%%Wx                       "r<cLw}5[|HQSE};  -=xr;;""_.~=I<=.                      8%%%%%%%WSr.                   
-                           <Q:                      .;L0@UQUhWWW#Q/ox.  ."~rK|)LQUUnf}A3-                      $%%%h[r`                      
-                          "[_                       .-"~---~"=;==;;".     ..-"";=rxI3a;'.                      _hj~                          
-                         ~n~                                   `'~~.           .`..                             vj                           
-                        `p"                                 ."r;`.                                               p;                          
-                        [x                               .-""_=<9GnlI=;=r="'._;"`                                x)                          
-                       v}                             ."rv=_   :;rv<3e!I<Ir;. ."xr-                              `p_                         
-                      ~0'                            `;rv/8EG6GX2Z3r;;===="-_`  _I3=~_`.                          P;                         
-                    =8%E                             ..."#%j~`           .``:=3fjrr="~'.                          ep"                        
-                 .<Q%%%s                                 y%53f)wwye1jevxvr;"~`~U%=....                            3%%C:                      
-               ~7W%%%%%u                                  3%%%%%%%%%%%%%%%%%%%W6"                                 4%%%%j.                    
-              :W%%%%%%%W:                                  "5[m||Nhh#WWWhU#WWA;                                   B%%%%%Hr                   
-              ~W%%%%%%%%b`                                  ..         ._:=r_                                    ~%%%%%%%%S'                 
-              ~W%%%%%%%%%H=                                 .~""~'__`...```                                      m%%%%%%%%%W!                
-              ~W%%%%%%%%%%%B;                                  .......                                         '|%%%%%%%%%%%%J"              
-              ~W%%%%%%%%%%%%%Jv`                                                                             `4W%%%%%%%%%%%%%%Q              
-              ~W%%%%%%%%%%%%%%%Wpv'                                                                       .;wW%%%%%%%%%%%%%%%%Q              
-              ~W%%%%%%%%%%%%%%%%%%%Q}r:                                                               .~vA#%%%%%%%%%%%%%%%%%%%@              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%#pjr~.                                                    ."xf|W%%%%%%%%%%%%%%%%%%%%%%%@              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%%%%%%WMKer;_.                                     ._"r<)BUW%%%%%%%%%%%%%%%%%%%%%%%%%%%%@              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%W#NOXwfe<xr=;""~~:'''':~~"";=rx<e7/BJUW%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Q              
-              ~W%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%N              
-               -''''''''''''''''''''''''''''''''-__`~":-':`_'__:'''''':__''__``~"_`__-''''''''''''''''''''''''''''''''''''''':_  
-
-*/	
-}
 
 //binarySearch(二叉树指针,节点数据【用户账号ID】)
 //返回是否查找到	true for find ，false for not find
@@ -643,6 +595,7 @@ user_two_bit_node* binaryTreeSearch(user_two_bit_node *root,int id) {
 		return binaryTreeSearch(root->rchind, id);
 }
 
+//二分查找
 int binarySearch(int id, int i, int j) {
 	while (i<=j) {
 		int mid =(i + j) / 2;
@@ -653,16 +606,20 @@ int binarySearch(int id, int i, int j) {
 	return -1;
 }
 
+
+//计算字符串的哈希值
 int std_hash_string(string password){
 	hash<string> hash_string;
 	string for_hash= password + ",-!~";		//计算两次哈希值解决哈希冲突
 	return hash_string(password)%1000000+hash_string(for_hash)%1000000+100000;
 }
 
+
+//代码封装 Q2 排序
 void RUN_BUBBLE() {
-	int a = openPassword();
+	int a = openPassword("password.txt");
 	TIME t3s = TIME_NOW;
-	Bubblesort(a);
+	Bubblesort(co,a);
 	TIME t3e = TIME_NOW;
 	cout << "Bubble Sort Time:\t";
 	timeCount(t3s, t3e);
@@ -684,7 +641,7 @@ void RUN_INSERT() {
 	timeCount(t1s, t1e);
 }
 void RUN_SHELL() {
-	int a = openPassword();
+	int a = openPassword("password.txt");
 	TIME t4s = TIME_NOW;
 	shellSort(co, a);
 	TIME t4e = TIME_NOW;
@@ -692,7 +649,7 @@ void RUN_SHELL() {
 	timeCount(t4s, t4e);
 }
 void RUN_HEAP() {
-	int a = openPassword();
+	int a = openPassword("password.txt");
 	TIME t5s = TIME_NOW;
 	heapSort(a);
 	TIME t5e = TIME_NOW;
@@ -700,7 +657,7 @@ void RUN_HEAP() {
 	timeCount(t5s, t5e);
 }
 void RUN_QUICK() {
-	int a = openPassword();
+	int a = openPassword("password.txt");
 	TIME t1s = TIME_NOW;
 	quickSort(co,0,a);
 	TIME t1e = TIME_NOW;
@@ -716,6 +673,68 @@ void RUN_MERGE() {
 	timeCount(t1s, t1e);
 }
 
+
+//代码封装 Q3 排序及输出
+void RUN_BUBBLE_REVERSE() {
+	int a = openPassword_CP("user.txt");
+	cout << a << endl;
+	a = 1000000;
+	TIME t3s = TIME_NOW;
+	Bubblesort(users, a);
+	TIME t3e = TIME_NOW;
+	cout << "Bubble Sort Time:\t(10000 data)";
+	timeCount(t3s, t3e);
+	cout << "估算1230000" << timeCountReturn(t3s, t3e)*1230000*1230000/10000/10000 << endl;
+	fileOutPut();
+}
+void RUN_SELECTION_REVERSE() {
+	int a = questionTwo();
+	TIME t2s = TIME_NOW;
+	selectionSort(a);
+	TIME t2e = TIME_NOW;
+	cout << "Selection Sort Time:\t";
+	timeCount(t2s, t2e);
+}
+void RUN_INSERT_REVERSE() {
+	int a = questionTwo();
+	TIME t1s = TIME_NOW;
+	insertSort(a);
+	TIME t1e = TIME_NOW;
+	cout << "Insert Sort Time:\t";
+	timeCount(t1s, t1e);
+}
+void RUN_SHELL_REVERSE() {
+	int a = openPassword_CP("user.txt");
+	TIME t4s = TIME_NOW;
+	shellSort(co, a);
+	TIME t4e = TIME_NOW;
+	cout << "Shell Sort Time :\t";
+	timeCount(t4s, t4e);
+}
+void RUN_HEAP_REVERSE() {
+	int a = openPassword_CP("user.txt");
+	TIME t5s = TIME_NOW;
+	heapSort(a);
+	TIME t5e = TIME_NOW;
+	cout << "Heap   Sort Time:\t";
+	timeCount(t5s, t5e);
+}
+void RUN_QUICK_REVERSE() {
+	int a = openPassword_CP("user.txt");
+	TIME t1s = TIME_NOW;
+	quickSort(co, 0, a);
+	TIME t1e = TIME_NOW;
+	cout << "Quick Sort Time:\t";
+	timeCount(t1s, t1e);
+}
+void RUN_MERGE_REVERSE() {
+	int a = questionTwo();
+	TIME t1s = TIME_NOW;
+	mergeSort(0, a);
+	TIME t1e = TIME_NOW;
+	cout << "Merge Sort Time:\t";
+	timeCount(t1s, t1e);
+}
 void RUN_QUESTION_2() {
 	
 	//RUN_BUBBLE();
@@ -726,19 +745,22 @@ void RUN_QUESTION_2() {
 	//RUN_QUICK();
 	//RUN_MERGE();
 }
-
 void RUN_QUESTION_3() {
-
+	RUN_BUBBLE_REVERSE();
+	//RUN_SELECTION_REVERSE();
+	//RUN_INSERT_REVERSE();
+	//RUN_SHELL_REVERSE();
+	//RUN_HEAP_REVERSE();
+	//RUN_QUICK_REVERSE();
+	//RUN_MERGE_REVERSE();
 }
 
 int main() {
 	//questionOne();
-	RUN_QUESTION_2();
-	//questionTree();
+	//RUN_QUESTION_2();
+	//RUN_QUESTION_3();
 	//questionFour();
 	//questionFive();
 	//questionSix();
 	//questionSeven();
-	
-	
 }
