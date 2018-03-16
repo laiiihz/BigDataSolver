@@ -18,9 +18,6 @@ int timeCountReturn(TIME t1, TIME t2) {
 }
 
 
-
-
-
 void questionOne() {
 	ifstream file_in("user.txt", ios::in);
 	ofstream file_out("password.txt", ios::out);
@@ -156,7 +153,7 @@ void fileOutPut() {
 }
 
 
-//排序函数
+
 void questionFour() {
 	TIME t1 = TIME_NOW;		//计时起点
 	/*Question 4*/
@@ -367,6 +364,8 @@ void questionSeven() {
 	}
 	cout << find << " " << not_find;
 }
+
+//排序函数
 void insertSort(int number) {
 	for (int i = 1; i < number; i++) {
 		int nowCount = counter[i].count;

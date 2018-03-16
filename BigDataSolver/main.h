@@ -22,9 +22,9 @@ struct counter {
 	int count;
 }user[MAXXX];
 
-struct counter counter[1230000];
+struct counter counter[MAXXX];
 struct counter temp;
-struct counter temp_counter[1230000];
+struct counter temp_counter[MAXXX];
 struct user *us = new struct user[MAXXX];
 struct counter *co = new struct counter[MAXXX];
 struct counter *users = new struct counter[MAXXX];
